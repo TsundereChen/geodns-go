@@ -1,0 +1,44 @@
+example.com:
+  SOA:
+    serial: 0101010101
+    refresh: 3600
+    retry: 300
+    expire: 3600000
+    minimum: 3600
+  rr:
+    a:
+      type: 'A'
+      default: '127.0.0.1'
+      rule:
+        - time: 0-23
+          region: us-east
+          value: '127.0.1.1'
+        - time: 0-23
+          region: jp
+          value: '127.0.2.1'
+    cname:
+      type: 'CNAME'
+      default: 'cname-default.example.com'
+      rule:
+        - time: 0-23
+          region: us-east
+          value: 'cname-us-east.example.com'
+        - time: 0-23
+          region: jp
+          value: 'cname-jp.example.com'
+    lb:
+      type: 'A'
+      default:
+        127.0.3.50: 50
+        127.0.4.50: 50
+      rule:
+        - time: 0-12
+          region: tw
+          value:
+            - 127.0.12.50: 50
+            - 127.12.0.50: 50
+        - time: 13-23
+          region: tw
+          value:
+            - 127.13.23.25: 25
+            - 127.23.13.75: 75
