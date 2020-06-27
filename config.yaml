@@ -42,3 +42,7 @@ example.com:
           value:
             - 127.13.23.25: 25
             - 127.23.13.75: 75
+regions:
+  'TW': 'tw'
+  'US': 'us'
+  'JP': 'jp'
