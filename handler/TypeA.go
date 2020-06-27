@@ -5,7 +5,7 @@ import (
     "github.com/miekg/dns"
 )
 
-func TypeAHandler(domain string)(rr dns.A){
+func TypeAHandler(domain string)(rr *dns.A){
     rr.Hdr = dns.RR_Header{
         Name: domain,
         Rrtype: dns.TypeA,
