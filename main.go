@@ -2,11 +2,13 @@ package main
 
 import (
     "flag"
+    "io/ioutil"
     "log"
     "os"
     "os/signal"
     "syscall"
 
+    "gopkg.in/yaml.v2"
     "github.com/miekg/dns"
 )
 
@@ -16,16 +18,27 @@ var (
     p *int
     D *bool
     a *string
-    dummySite string
+    C *bool
+    config map[string]interface{}
 )
 
 func main() {
     defaultOptions()
     flag.Parse()
 
-    dummySite = "example.com"
+    // Read in config.yaml
+    var configFileRaw, err = ioutil.ReadFile(*c)
+    if err != nil {
+        panic(err)
+    }
+    yaml.Unmarshal([]byte(configFileRaw), &config)
 
-    dns.HandleFunc(dummySite, dummyHandleFunction)
+    // Add domain into handleFunction
+    var domainList = fetchDomain(config)
+    for i := range domainList {
+        dns.HandleFunc(domainList[i], handleFunction)
+    }
+
 
     log.Printf("Starting DNS server...\n")
 
@@ -36,5 +49,4 @@ func main() {
     signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
     s := <-sig
     log.Fatalf("Signal (%v) received, stopping\n", s)
-
 }
