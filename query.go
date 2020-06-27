@@ -1,23 +1,29 @@
 package main
 
 import (
-    "net"
-    "log"
+//    "net"
     "github.com/miekg/dns"
+    "github.com/TsundereChen/geodns-go/handler"
 )
 
-func dummyHandleFunction(w dns.ResponseWriter, r *dns.Msg){
+func handleFunction(w dns.ResponseWriter, r *dns.Msg){
     m := new(dns.Msg)
     m.SetReply(r)
+    m.Compress = *C
     m.Authoritative = true
     domain := m.Question[0].Name
-    log.Printf("Received query request for %s\n", domain)
-    rr := new(dns.A)
-    rr.Hdr = dns.RR_Header{Name: domain,
-                            Rrtype: dns.TypeA,
-                            Class: dns.ClassINET,
-                            Ttl: 3600}
-    rr.A = net.IPv4(127,0,0,1)
-    m.Answer = []dns.RR{rr}
+    switch r.Question[0].Qtype{
+        case dns.TypeTXT:
+
+        case dns.TypeA:
+            rr := handler.TypeAHandler(domain)
+            m.Answer = []dns.RR{rr}
+            break
+        case dns.TypeAAAA:
+
+        case dns.TypeCNAME:
+
+        default:
+    }
     w.WriteMsg(m)
 }
