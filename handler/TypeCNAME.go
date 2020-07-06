@@ -1,7 +1,6 @@
 package handler
 
 import (
-    "net"
     "github.com/miekg/dns"
 )
 
