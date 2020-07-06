@@ -1,7 +1,6 @@
 package handler
 
 import (
-    "net"
     "github.com/miekg/dns"
 )
 
@@ -11,6 +10,6 @@ func TypeTXTHandler(domain string)(rr *dns.TXT){
         Rrtype: dns.TypeTXT,
         Class: dns.ClassINET,
         Ttl: 3600}
-    rr.Txt = "sample string"
+    rr.Txt = []string{"sample string"}
     return rr
 }
