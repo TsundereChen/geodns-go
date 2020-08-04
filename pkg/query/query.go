@@ -2,6 +2,7 @@ package query
 
 import (
     _ "net"
+    "strings"
     "github.com/miekg/dns"
     "github.com/TsundereChen/geodns-go/pkg/handler"
 )
@@ -15,25 +16,27 @@ func HandleFunction(w dns.ResponseWriter, r *dns.Msg){
     m.SetReply(r)
     m.Compress = *C
     m.Authoritative = true
-    domain := m.Question[0].Name
+    fqdn := m.Question[0].Name
+    fqdn = strings.ToLower(fqdn)
     switch r.Question[0].Qtype{
         case dns.TypeTXT:
-            rr := handler.TypeTXTHandler(domain)
+            rr := handler.DNSHandler(fqdn, "TXT")
             m.Answer = []dns.RR{rr}
             break
         case dns.TypeA:
-            rr := handler.TypeAHandler(domain)
+            rr := handler.DNSHandler(fqdn, "A")
             m.Answer = []dns.RR{rr}
             break
         case dns.TypeAAAA:
-            rr := handler.TypeAAAAHandler(domain)
+            rr := handler.DNSHandler(fqdn, "AAAA")
             m.Answer = []dns.RR{rr}
             break
         case dns.TypeCNAME:
-            rr := handler.TypeCNAMEHandler(domain)
+            rr := handler.DNSHandler(fqdn, "CNAME")
             m.Answer = []dns.RR{rr}
             break
         default:
+            break
     }
     w.WriteMsg(m)
 }
