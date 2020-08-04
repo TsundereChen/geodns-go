@@ -13,6 +13,7 @@ var (
 
 func DNSHandler(fqdn string, recordType string)(rr *dns.A){
     // Get the subdomain information first
+    var value string;
     for k := range configMap {
         if(strings.Contains(fqdn, k)){
             // Split FQDN into domain and subdomain
@@ -23,8 +24,10 @@ func DNSHandler(fqdn string, recordType string)(rr *dns.A){
                 if(rrName == subdomain){
                     // Check if rr type match
                     rrType := fetch.FetchRrType(rrData[rrName])
-                    if(rrType == "A"){
+                    if(rrType == recordType){
                         // Match
+                        // Use default value first
+                        value = fetch.FetchDefaultValue(rrData[rrName])
                     } else {
                         continue
                     }
@@ -37,6 +40,6 @@ func DNSHandler(fqdn string, recordType string)(rr *dns.A){
         Rrtype: dns.TypeA,
         Class: dns.ClassINET,
         Ttl: 3600}
-    rr.A = net.IPv4(127,0,0,1)
+    rr.A = net.ParseIP(value)
     return rr
 }

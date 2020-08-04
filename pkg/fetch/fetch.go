@@ -15,3 +15,7 @@ func FetchSubDomainName(fqdn string, domain string) (subDomain string){
 func FetchRrType(rrData interface{}) (rrType string){
     return rrData.(map[string]interface{})["type"].(string)
 }
+
+func FetchDefaultValue(rrData interface{}) (value string){
+    return rrData.(map[string]interface{})["default"].(string)
+}
