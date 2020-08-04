@@ -1,7 +1,7 @@
 package config
 
-func FetchDomain(config map[string]interface{}) (domainList []string){
-    for domain := range config{
+func FetchDomain(configMap map[string]interface{}) (domainList []string){
+    for domain := range configMap{
         if (domain != "regions"){
             domainList = append(domainList, domain)
         }
