@@ -6,7 +6,7 @@ import (
     "github.com/TsundereChen/geodns-go/pkg/handler"
 )
 
-func handleFunction(w dns.ResponseWriter, r *dns.Msg){
+func HandleFunction(w dns.ResponseWriter, r *dns.Msg){
     m := new(dns.Msg)
     m.SetReply(r)
     m.Compress = *C

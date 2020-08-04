@@ -10,6 +10,11 @@ import (
 
     "gopkg.in/yaml.v2"
     "github.com/miekg/dns"
+
+    "github.com/TsundereChen/geodns-go/pkg/config"
+    "github.com/TsundereChen/geodns-go/pkg/query"
+    server "github.com/TsundereChen/geodns-go/pkg/serve"
+
 )
 
 var (
@@ -19,8 +24,17 @@ var (
     D *bool
     a *string
     C *bool
-    config map[string]interface{}
+    configMap map[string]interface{}
 )
+
+func defaultOptions(){
+    c = flag.String("c", "/etc/geodns/config.yml", "the location of the configuration file of DNS server")
+    g = flag.String("g", "/etc/geodns/geolite2-city.mmdb", "the location of GeoLite2/GeoIP2 city MMDB")
+    p = flag.Int("p", 8053, "which port to listen")
+    D = flag.Bool("D", false, "enable debug mode to print out more information while running the server")
+    a = flag.String("a", "127.0.0.1", "which address to listen for the request")
+    C = flag.Bool("C", false, "enable DNS message compression")
+}
 
 func main() {
     defaultOptions()
@@ -31,19 +45,19 @@ func main() {
     if err != nil {
         panic(err)
     }
-    yaml.Unmarshal([]byte(configFileRaw), &config)
+    yaml.Unmarshal([]byte(configFileRaw), &configMap)
 
     // Add domain into handleFunction
-    var domainList = fetchDomain(config)
+    var domainList = config.FetchDomain(configMap)
     for i := range domainList {
-        dns.HandleFunc(domainList[i], handleFunction)
+        dns.HandleFunc(domainList[i], query.HandleFunction)
     }
 
 
     log.Printf("Starting DNS server...\n")
 
-    go serve(p, "tcp", a)
-    go serve(p, "udp", a)
+    go server.Serve(p, "tcp", a)
+    go server.Serve(p, "udp", a)
 
     sig := make(chan os.Signal)
     signal.Notify(sig, syscall.SIGINT, syscall.SIGTERM)
