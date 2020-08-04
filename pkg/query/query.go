@@ -7,14 +7,9 @@ import (
     "github.com/TsundereChen/geodns-go/pkg/handler"
 )
 
-var (
-    C *bool
-)
-
 func HandleFunction(w dns.ResponseWriter, r *dns.Msg){
     m := new(dns.Msg)
     m.SetReply(r)
-    m.Compress = *C
     m.Authoritative = true
     fqdn := m.Question[0].Name
     fqdn = strings.ToLower(fqdn)

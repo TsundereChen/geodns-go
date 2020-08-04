@@ -1,4 +1,4 @@
-package geodns
+package main
 
 import (
     "flag"
@@ -23,7 +23,6 @@ var (
     p *int
     D *bool
     a *string
-    C *bool
     configMap map[string]interface{}
 )
 
@@ -33,7 +32,6 @@ func defaultOptions(){
     p = flag.Int("p", 8053, "which port to listen")
     D = flag.Bool("D", false, "enable debug mode to print out more information while running the server")
     a = flag.String("a", "127.0.0.1", "which address to listen for the request")
-    C = flag.Bool("C", false, "enable DNS message compression")
 }
 
 func main() {
