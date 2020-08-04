@@ -4,12 +4,13 @@ import (
     _ "net"
     "github.com/miekg/dns"
     "github.com/TsundereChen/geodns-go/pkg/handler"
+    "github.com/TsundereChen/geodns-go/cmd/geodns"
 )
 
 func HandleFunction(w dns.ResponseWriter, r *dns.Msg){
     m := new(dns.Msg)
     m.SetReply(r)
-    m.Compress = *C
+    m.Compress = *geodns.C
     m.Authoritative = true
     domain := m.Question[0].Name
     switch r.Question[0].Qtype{
