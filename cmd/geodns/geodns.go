@@ -2,14 +2,10 @@ package main
 
 import (
 	"flag"
-	"io/ioutil"
 	"log"
 	"os"
 	"os/signal"
 	"syscall"
-
-	"github.com/miekg/dns"
-	"gopkg.in/yaml.v2"
 
 	"github.com/TsundereChen/geodns-go/pkg/config"
 	"github.com/TsundereChen/geodns-go/pkg/query"
@@ -37,18 +33,11 @@ func main() {
 	defaultOptions()
 	flag.Parse()
 
-	// Read in config.yaml
-	var configFileRaw, err = ioutil.ReadFile(*c)
-	if err != nil {
-		panic(err)
-	}
-	yaml.Unmarshal([]byte(configFileRaw), &configMap)
+	// Initial configMap
+	config.FetchConfigMap(c)
 
-	// Add domain into handleFunction
-	var domainList = config.FetchDomain(configMap)
-	for i := range domainList {
-		dns.HandleFunc(domainList[i], query.HandleFunction)
-	}
+	// Register domain
+	query.RegisterDomain()
 
 	log.Printf("Starting DNS server...\n")
 

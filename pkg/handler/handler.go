@@ -1,25 +1,24 @@
 package handler
 
 import (
-	"github.com/TsundereChen/geodns-go/pkg/fetch"
-	"github.com/miekg/dns"
+	"fmt"
 	"net"
 	"strings"
-)
 
-var (
-	configMap map[string]interface{}
+	"github.com/TsundereChen/geodns-go/pkg/config"
+	"github.com/TsundereChen/geodns-go/pkg/fetch"
+	"github.com/miekg/dns"
 )
 
 func DNSHandler(fqdn string, recordType string) (rr *dns.A) {
 	// Get the subdomain information first
 	var value string
-	for k := range configMap {
+	for k := range config.ConfigMap {
 		if strings.Contains(fqdn, k) {
 			// Split FQDN into domain and subdomain
 			subdomain := fetch.FetchSubDomainName(fqdn, k)
 			// Now find if record exists.
-			rrData := fetch.FetchRR(configMap[k])
+			rrData := fetch.FetchRR(config.ConfigMap[k])
 			for rrName := range rrData {
 				if rrName == subdomain {
 					// Check if rr type match
@@ -35,6 +34,8 @@ func DNSHandler(fqdn string, recordType string) (rr *dns.A) {
 			}
 		}
 	}
+	rr = new(dns.A)
+	// Create RR according to request
 	rr.Hdr = dns.RR_Header{
 		Name:   fqdn,
 		Rrtype: dns.TypeA,

@@ -1,11 +1,16 @@
 package fetch
 
 import (
+	"github.com/miekg/dns"
 	"strings"
 )
 
-func FetchRR(config interface{}) (rrData map[string]interface{}) {
-	return config.(map[string]interface{})["rr"].(map[string]interface{})
+var (
+	ConfigMap map[string]interface{}
+)
+
+func FetchRR(config interface{}) (rrData map[interface{}]interface{}) {
+	return config.(map[interface{}]interface{})["rr"].(map[interface{}]interface{})
 }
 
 func FetchSubDomainName(fqdn string, domain string) (subDomain string) {
@@ -13,9 +18,24 @@ func FetchSubDomainName(fqdn string, domain string) (subDomain string) {
 }
 
 func FetchRrType(rrData interface{}) (rrType string) {
-	return rrData.(map[string]interface{})["type"].(string)
+	return rrData.(map[interface{}]interface{})["type"].(string)
 }
 
 func FetchDefaultValue(rrData interface{}) (value string) {
-	return rrData.(map[string]interface{})["default"].(string)
+	return rrData.(map[interface{}]interface{})["default"].(string)
+}
+
+func FetchDNSType(requestType string) (rrType uint16) {
+	switch requestType {
+	case "A":
+		return dns.TypeA
+	case "AAAA":
+		return dns.TypeAAAA
+	case "CNAME":
+		return dns.TypeCNAME
+	case "TXT":
+		return dns.TypeTXT
+	default:
+		return dns.TypeNone
+	}
 }
