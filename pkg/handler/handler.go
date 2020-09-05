@@ -1,16 +1,14 @@
 package handler
 
 import (
-	"fmt"
-	"net"
-	"strings"
-
 	"github.com/TsundereChen/geodns-go/pkg/config"
 	"github.com/TsundereChen/geodns-go/pkg/fetch"
 	"github.com/miekg/dns"
+	_ "net"
+	"strings"
 )
 
-func DNSHandler(fqdn string, recordType string) (rr *dns.A) {
+func DNSHandler(fqdn string, questionType uint16) (rr dns.RR) {
 	// Get the subdomain information first
 	var value string
 	for k := range config.ConfigMap {
@@ -23,7 +21,7 @@ func DNSHandler(fqdn string, recordType string) (rr *dns.A) {
 				if rrName == subdomain {
 					// Check if rr type match
 					rrType := fetch.FetchRrType(rrData[rrName])
-					if rrType == recordType {
+					if typeChecker(rrType, questionType) {
 						// Match
 						// Use default value first
 						value = fetch.FetchDefaultValue(rrData[rrName])
@@ -34,13 +32,10 @@ func DNSHandler(fqdn string, recordType string) (rr *dns.A) {
 			}
 		}
 	}
-	rr = new(dns.A)
-	// Create RR according to request
-	rr.Hdr = dns.RR_Header{
-		Name:   fqdn,
-		Rrtype: dns.TypeA,
-		Class:  dns.ClassINET,
-		Ttl:    3600}
-	rr.A = net.ParseIP(value)
+    rr = RrGenerator(questionType, fqdn, value)
 	return rr
+}
+
+func typeChecker(rrType string, questionType uint16) (res bool) {
+	return rrType == dns.TypeToString[questionType]
 }
