@@ -10,13 +10,13 @@ func RrGenerator(requestType uint16, fqdn string, value string) (rr dns.RR){
             rr = rrLib.TypeA(fqdn, value)
             break
         case dns.TypeAAAA:
-            rr = new(dns.AAAA)
+            rr = rrLib.TypeAAAA(fqdn, value)
             break
         case dns.TypeCNAME:
-            rr = new (dns.CNAME)
+            rr = rrLib.TypeCNAME(fqdn, value)
             break
         case dns.TypeTXT:
-            rr = new(dns.TXT)
+            rr = rrLib.TypeTXT(fqdn, value)
             break
         default:
             rr = new(dns.NULL)
