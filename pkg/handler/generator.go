@@ -1,7 +1,7 @@
 package handler
 import (
     "github.com/miekg/dns"
-    rrLib "github.com/TsundereChen/geodns-go/handler/pkg/rr"
+    rrLib "github.com/TsundereChen/geodns-go/pkg/rr"
 )
 
 func RrGenerator(requestType uint16, fqdn string, value string) (rr dns.RR){
