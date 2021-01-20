@@ -11,6 +11,7 @@ import (
 func DNSHandler(fqdn string, questionType uint16) (rr dns.RR) {
 	// Get the subdomain information first
 	var value string
+	value = ""
 	for k := range config.ConfigMap {
 		if strings.Contains(fqdn, k) {
 			// Split FQDN into domain and subdomain
@@ -32,7 +33,7 @@ func DNSHandler(fqdn string, questionType uint16) (rr dns.RR) {
 			}
 		}
 	}
-    rr = RrGenerator(questionType, fqdn, value)
+	rr = RrGenerator(questionType, fqdn, value)
 	return rr
 }
 
