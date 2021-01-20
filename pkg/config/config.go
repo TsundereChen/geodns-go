@@ -6,7 +6,12 @@ import (
 )
 
 var (
-	ConfigMap map[string]interface{}
+	ConfigMap         map[string]interface{}
+	ConfigLocation    *string
+	GeoLiteDBLocation *string
+	Port              *int
+	Debug             *bool
+	ListenAddress     *string
 )
 
 func FetchConfigMap(c *string) {
