@@ -24,7 +24,7 @@ func HandleFunction(w dns.ResponseWriter, r *dns.Msg) {
 	m.SetReply(r)
 	m.Authoritative = true
 	fqdn := strings.ToLower(m.Question[0].Name)
-    rr := handler.DNSHandler(fqdn, r.Question[0].Qtype)
-    m.Answer = []dns.RR{rr}
+	rr := handler.DNSHandler(fqdn, r.Question[0].Qtype)
+	m.Answer = []dns.RR{rr}
 	w.WriteMsg(m)
 }
