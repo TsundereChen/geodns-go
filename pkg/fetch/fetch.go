@@ -26,7 +26,7 @@ func FetchDefaultValue(rrData interface{}) (value string) {
 }
 
 func FetchDNSType(requestType string) (rrType uint16) {
-	switch requestType {
+	switch strings.ToUpper(requestType) {
 	case "A":
 		return dns.TypeA
 	case "AAAA":
