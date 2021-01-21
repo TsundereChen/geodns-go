@@ -18,14 +18,14 @@ example.com:
           value: '127.0.2.1'
     cname:
       type: 'CNAME'
-      default: 'cname-default.example.com'
+      default: 'cname-default.example.com.'
       rule:
         - time: 0-23
           region: us-east
-          value: 'cname-us-east.example.com'
+          value: 'cname-us-east.example.com.'
         - time: 0-23
           region: jp
-          value: 'cname-jp.example.com'
+          value: 'cname-jp.example.com.'
     lb:
       type: 'A'
       default:
