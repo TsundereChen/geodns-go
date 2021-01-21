@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"github.com/TsundereChen/geodns-go/pkg/config"
 	"github.com/TsundereChen/geodns-go/pkg/fetch"
 	"github.com/miekg/dns"
@@ -10,12 +11,18 @@ import (
 
 func DNSHandler(fqdn string, questionType uint16) (rr dns.RR) {
 	// Get the subdomain information first
+	if *(config.Debug) == true {
+		fmt.Printf("handler.DNSHandler handling request %s, question type %s\n", fqdn, dns.TypeToString[questionType])
+	}
 	var value string
 	value = ""
 	for k := range config.ConfigMap {
 		if strings.Contains(fqdn, k) {
 			// Split FQDN into domain and subdomain
 			subdomain := fetch.FetchSubDomainName(fqdn, k)
+			if *(config.Debug) == true {
+				fmt.Printf("Searching subdomain %s in %s\n", subdomain, k)
+			}
 			// Now find if record exists.
 			rrData := fetch.FetchRR(config.ConfigMap[k])
 			for rrName := range rrData {
