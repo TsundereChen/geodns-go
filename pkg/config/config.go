@@ -1,9 +1,9 @@
 package config
 
 import (
+	"github.com/oschwald/geoip2-golang"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
-    "github.com/oschwald/geoip2-golang"
 )
 
 var (
@@ -13,7 +13,7 @@ var (
 	Port              *int
 	Debug             *bool
 	ListenAddress     *string
-    GeoDB             *geoip2.Reader
+	GeoDB             *geoip2.Reader
 )
 
 func FetchConfigMap(c *string) {

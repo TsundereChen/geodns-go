@@ -7,10 +7,10 @@ import (
 	"os/signal"
 	"syscall"
 
-    "github.com/oschwald/geoip2-golang"
 	"github.com/TsundereChen/geodns-go/pkg/config"
 	"github.com/TsundereChen/geodns-go/pkg/query"
 	server "github.com/TsundereChen/geodns-go/pkg/serve"
+	"github.com/oschwald/geoip2-golang"
 )
 
 func defaultOptions() {
@@ -31,7 +31,7 @@ func main() {
 	// Register domain
 	query.RegisterDomain()
 
-    config.GeoDB, _ = geoip2.Open(*config.GeoLiteDBLocation)
+	config.GeoDB, _ = geoip2.Open(*config.GeoLiteDBLocation)
 
 	log.Printf("Starting DNS server...\n")
 

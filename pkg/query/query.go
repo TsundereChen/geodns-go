@@ -20,22 +20,22 @@ func RegisterDomain() {
 }
 
 func HandleFunction(w dns.ResponseWriter, r *dns.Msg) {
-    var (
-        v4 bool
-        sourceAddress net.IP
-    )
+	var (
+		v4            bool
+		sourceAddress net.IP
+	)
 	m := new(dns.Msg)
 	m.SetReply(r)
 	m.Authoritative = true
 
-    if ip, ok := w.RemoteAddr().(*net.UDPAddr); ok {
-        sourceAddress = ip.IP
-        v4 = sourceAddress.To4() != nil
-    }
-    if ip, ok := w.RemoteAddr().(*net.TCPAddr); ok {
-        sourceAddress = ip.IP
-        v4 = sourceAddress.To4() != nil
-    }
+	if ip, ok := w.RemoteAddr().(*net.UDPAddr); ok {
+		sourceAddress = ip.IP
+		v4 = sourceAddress.To4() != nil
+	}
+	if ip, ok := w.RemoteAddr().(*net.TCPAddr); ok {
+		sourceAddress = ip.IP
+		v4 = sourceAddress.To4() != nil
+	}
 	fqdn := strings.ToLower(m.Question[0].Name)
 	rr := handler.DNSHandler(fqdn, r.Question[0].Qtype, sourceAddress, v4)
 	m.Answer = []dns.RR{rr}
