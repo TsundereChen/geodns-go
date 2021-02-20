@@ -5,13 +5,20 @@ import (
 	"github.com/TsundereChen/geodns-go/pkg/config"
 	"github.com/TsundereChen/geodns-go/pkg/fetch"
 	"github.com/miekg/dns"
-	_ "net"
+	"net"
 	"strings"
+    "log"
 )
 
-func DNSHandler(fqdn string, questionType uint16) (rr dns.RR) {
+func DNSHandler(fqdn string, questionType uint16, sourceAddress net.IP, IPv4 bool) (rr dns.RR) {
 	// Get the subdomain information first
+    record, err := config.GeoDB.City(sourceAddress)
+    if err != nil {
+        log.Panic(err)
+    }
 	if *(config.Debug) == true {
+        fmt.Printf("Source IP => %s\n", sourceAddress.String())
+        fmt.Printf("Source City => %s\n", record.City.Names["en-US"])
 		fmt.Printf("handler.DNSHandler handling request %s, question type %s\n", fqdn, dns.TypeToString[questionType])
 	}
 	var value string
