@@ -18,7 +18,7 @@ func DNSHandler(fqdn string, questionType uint16, sourceAddress net.IP, IPv4 boo
     }
 	if *(config.Debug) == true {
         fmt.Printf("Source IP => %s\n", sourceAddress.String())
-        fmt.Printf("Source City => %s\n", record.Country.Names["en-US"])
+        fmt.Printf("Source Country => %s\n", record.Country.Names["en"])
 		fmt.Printf("handler.DNSHandler handling request %s, question type %s\n", fqdn, dns.TypeToString[questionType])
 	}
 	var value string
