@@ -1,10 +1,10 @@
 package handler
 
 import (
-	"log"
 	"github.com/TsundereChen/geodns-go/pkg/config"
 	rrLib "github.com/TsundereChen/geodns-go/pkg/rr"
 	"github.com/miekg/dns"
+	"log"
 )
 
 func RrGenerator(requestType uint16, fqdn string, value string) (rr dns.RR) {
