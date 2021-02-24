@@ -1,7 +1,6 @@
 package query
 
 import (
-	_ "fmt"
 	"net"
 	"strings"
 
