@@ -8,7 +8,7 @@ import (
 
 var (
 	ConfigMap         map[string]interface{}
-    ServerMapping     map[interface{}]interface{}
+	ServerMapping     map[interface{}]interface{}
 	ConfigLocation    *string
 	GeoLiteDBLocation *string
 	Port              *int
@@ -23,7 +23,7 @@ func FetchConfigMap(c *string) {
 		panic(err)
 	}
 	yaml.Unmarshal([]byte(configFile), &ConfigMap)
-    ServerMapping = ConfigMap["regions"].(map[interface{}]interface{})
+	ServerMapping = ConfigMap["regions"].(map[interface{}]interface{})
 }
 
 func FetchDomain(configMap map[string]interface{}) (domainList []string) {
