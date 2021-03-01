@@ -1,6 +1,7 @@
 package query
 
 import (
+    "log"
 	"net"
 	"strings"
 
@@ -21,6 +22,7 @@ func RegisterDomain() {
 func HandleFunction(w dns.ResponseWriter, r *dns.Msg) {
 	var (
 		v4            bool
+        TCP           bool
 		sourceAddress net.IP
 	)
 	m := new(dns.Msg)
@@ -30,11 +32,20 @@ func HandleFunction(w dns.ResponseWriter, r *dns.Msg) {
 	if ip, ok := w.RemoteAddr().(*net.UDPAddr); ok {
 		sourceAddress = ip.IP
 		v4 = sourceAddress.To4() != nil
+        TCP = false
 	}
 	if ip, ok := w.RemoteAddr().(*net.TCPAddr); ok {
 		sourceAddress = ip.IP
 		v4 = sourceAddress.To4() != nil
+        TCP = true
 	}
+    if *config.Debug {
+        if TCP {
+            log.Printf("Got incoming request TCP.\n");
+        } else {
+            log.Printf("Got incoming request UDP.\n");
+        }
+    }
 	fqdn := strings.ToLower(m.Question[0].Name)
 	rr := handler.DNSHandler(fqdn, r.Question[0].Qtype, sourceAddress, v4)
 	m.Answer = []dns.RR{rr}
