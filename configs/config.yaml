@@ -11,20 +11,20 @@ example.com:
       default: '127.0.0.1'
       rule:
         - time: 0-23
-          region: us-east
+          region: Provider_A
           value: '127.0.1.1'
         - time: 0-23
-          region: jp
+          region: Provider_C
           value: '127.0.2.1'
     cname:
       type: 'CNAME'
       default: 'cname-default.example.com.'
       rule:
         - time: 0-23
-          region: us-east
+          region: Provider_A
           value: 'cname-us-east.example.com.'
         - time: 0-23
-          region: jp
+          region: Provider_B
           value: 'cname-jp.example.com.'
     lb:
       type: 'A'
@@ -33,16 +33,16 @@ example.com:
         127.0.4.50: 50
       rule:
         - time: 0-12
-          region: tw
+          region: Provider_B
           value:
             - 127.0.12.50: 50
             - 127.12.0.50: 50
         - time: 13-23
-          region: tw
+          region: Provider_C
           value:
             - 127.13.23.25: 25
             - 127.23.13.75: 75
 regions:
-  'TW': 'tw'
-  'US': 'us'
-  'JP': 'jp'
+  'TW': 'Provider_A'
+  'US': 'Provider_B'
+  'JP': 'Provider_C'
