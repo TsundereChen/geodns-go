@@ -6,7 +6,6 @@ import (
     "github.com/TsundereChen/geodns-go/pkg/fetch"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
-    "log"
     "crypto/sha1"
 )
 
