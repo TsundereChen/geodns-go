@@ -2,13 +2,18 @@ package config
 
 import (
 	"github.com/oschwald/geoip2-golang"
+    "github.com/smallnest/weighted"
+    "github.com/TsundereChen/geodns-go/pkg/fetch"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
+    "log"
+    "crypto/sha1"
 )
 
 var (
 	ConfigMap         map[string]interface{}
 	ServerMapping     map[interface{}]interface{}
+    WeightedRR        map[string]*weighted.RRW
 	ConfigLocation    *string
 	GeoLiteDBLocation *string
 	Port              *int
@@ -33,4 +38,35 @@ func FetchDomain(configMap map[string]interface{}) (domainList []string) {
 		}
 	}
 	return domainList
+}
+
+func RegisterWeightedRRRecords() {
+    for domain := range ConfigMap {
+        if domain != "regions" {
+            rrData := fetch.FetchRR(ConfigMap[domain])
+            for rr := range rrData {
+                rules := fetch.FetchRules(rrData[rr])
+                for rule := range rules {
+                    values := rules[rule].(map[interface{}]interface{})["value"].([]interface{})
+                    region := rules[rule].(map[interface{}]interface{})["region"].(string)
+                    time := rules[rule].(map[interface{}]interface{})["time"].(string)
+                    hashString := Hash(rr.(string) + domain + region + time)
+                    WeightedRR[hashString] = &weighted.RRW{}
+                    for value := range values {
+                        valueMap := values[value].(map[interface{}]interface{})
+                        for k,v := range valueMap {
+                            WeightedRR[hashString].Add(k, v.(int))
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+func Hash(s string) string {
+    h := sha1.New()
+    h.Write([]byte(s))
+    bs := h.Sum(nil)
+    return string(bs)
 }
