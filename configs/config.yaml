@@ -7,27 +7,31 @@ example.com:
     minimum: 3600
   rr:
     a:
-      type: 'A'
-      default: '127.0.0.1'
+      type: A
+      default: 127.0.0.1
       rule:
         - time: 0-23
           region: Provider_A
-          value: '127.0.1.1'
+          value:
+            - 127.0.1.1: 1
         - time: 0-23
           region: Provider_C
-          value: '127.0.2.1'
+          value:
+            - 127.0.2.1: 1
     cname:
-      type: 'CNAME'
-      default: 'cname-default.example.com.'
+      type: CNAME
+      default: cname-default.example.com.
       rule:
         - time: 0-23
           region: Provider_A
-          value: 'cname-us-east.example.com.'
+          value:
+            - cname-us.example.com.: 1
         - time: 0-23
           region: Provider_B
-          value: 'cname-jp.example.com.'
+          value:
+            - cname-jp.example.com: 1
     lb:
-      type: 'A'
+      type: A
       default:
         127.0.3.50: 50
         127.0.4.50: 50
