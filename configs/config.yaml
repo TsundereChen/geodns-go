@@ -32,9 +32,7 @@ example.com:
             - cname-jp.example.com: 1
     lb:
       type: A
-      default:
-        127.0.3.50: 50
-        127.0.4.50: 50
+      default: 127.0.0.1
       rule:
         - time: 0-12
           region: Provider_B
