@@ -31,6 +31,9 @@ func main() {
 	// Register domain
 	query.RegisterDomain()
 
+    // Register Weighted Round-Robin DNS records
+    config.RegisterWeightedRRRecords()
+
 	config.GeoDB, _ = geoip2.Open(*config.GeoLiteDBLocation)
 
 	log.Printf("Starting DNS server...\n")
