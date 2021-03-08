@@ -26,7 +26,7 @@ func FetchDefaultValue(rrData interface{}) (value string) {
 }
 
 func FetchRules(rrData interface{}) (rules []interface{}) {
-    return rrData.(map[interface{}]interface{})["rule"].([]interface{})
+	return rrData.(map[interface{}]interface{})["rule"].([]interface{})
 }
 
 func FetchDNSType(requestType string) (rrType uint16) {

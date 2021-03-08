@@ -11,7 +11,7 @@ import (
 	"github.com/TsundereChen/geodns-go/pkg/query"
 	server "github.com/TsundereChen/geodns-go/pkg/serve"
 	"github.com/oschwald/geoip2-golang"
-    "github.com/smallnest/weighted"
+	"github.com/smallnest/weighted"
 )
 
 func defaultOptions() {
@@ -32,10 +32,10 @@ func main() {
 	// Register domain
 	query.RegisterDomain()
 
-    // Initialize WeightedRR map
-    config.WeightedRR = make(map[string]*weighted.RRW)
-    // Register Weighted Round-Robin DNS records
-    config.RegisterWeightedRRRecords()
+	// Initialize WeightedRR map
+	config.WeightedRR = make(map[string]*weighted.RRW)
+	// Register Weighted Round-Robin DNS records
+	config.RegisterWeightedRRRecords()
 
 	config.GeoDB, _ = geoip2.Open(*config.GeoLiteDBLocation)
 
