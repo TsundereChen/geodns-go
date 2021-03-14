@@ -6,7 +6,9 @@ import (
 	"github.com/miekg/dns"
 	"log"
 	"net"
+	"strconv"
 	"strings"
+	"time"
 )
 
 func DNSHandler(fqdn string, questionType uint16, sourceAddress net.IP, IPv4 bool) (rr dns.RR) {
@@ -37,8 +39,43 @@ func DNSHandler(fqdn string, questionType uint16, sourceAddress net.IP, IPv4 boo
 					rrType := fetch.FetchRrType(rrData[rrName])
 					if typeChecker(rrType, questionType) {
 						// Match
-						// Use default value first
-						value = fetch.FetchDefaultValue(rrData[rrName])
+						if record.Country.IsoCode == "" {
+							// If country ISO code is empty
+							// Return default value
+							value = fetch.FetchDefaultValue(rrData[rrName])
+						} else if config.ServerMapping[record.Country.IsoCode] == "" {
+							// If there's no value in ServerMapping
+							// Also return default value
+							value = fetch.FetchDefaultValue(rrData[rrName])
+						} else {
+							// Locate the region first
+							region := config.ServerMapping[record.Country.IsoCode]
+							// Check if there's any rule matches the request
+							rules := fetch.FetchRules(rrData[rrName])
+							// Set value as default value first
+							// Overwrite the default value if we found matching rule
+							value = fetch.FetchDefaultValue(rrData[rrName])
+							for rule := range rules {
+								recordRegion := rules[rule].(map[interface{}]interface{})["region"].(string)
+								if region != recordRegion {
+									// If region doesn't match
+									// Then check next rule
+									continue
+								}
+								ruleTime := rules[rule].(map[interface{}]interface{})["time"].(string)
+								timeArr := strings.Split(ruleTime, "-")
+								timeStart, _ := strconv.Atoi(timeArr[0])
+								timeEnd, _ := strconv.Atoi(timeArr[1])
+								currHour, _, _ := time.Now().Clock()
+								if timeStart <= currHour && currHour <= timeEnd {
+									// Time is valid, check the record and return the result
+									hashString := config.Hash(rrName.(string) + k + recordRegion + ruleTime)
+									value = config.WeightedRR[hashString].Next().(string)
+								} else {
+									continue
+								}
+							}
+						}
 					} else {
 						continue
 					}
