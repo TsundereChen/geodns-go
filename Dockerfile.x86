@@ -7,4 +7,4 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o geodns-go ./cmd/g
 FROM alpine:latest
 WORKDIR /app
 COPY --from=builder /app/geodns-go /app/geodns-go
-CMD ["/app/geodns-go"]
+ENTRYPOINT ["/app/geodns-go"]
