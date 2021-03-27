@@ -48,6 +48,10 @@ func HandleFunction(w dns.ResponseWriter, r *dns.Msg) {
 	}
 	fqdn := strings.ToLower(m.Question[0].Name)
 	rr := handler.DNSHandler(fqdn, r.Question[0].Qtype, sourceAddress, v4)
-	m.Answer = []dns.RR{rr}
+    if rr != nil {
+        // Only add Answer part if rr isn't nil
+	    m.Answer = []dns.RR{rr}
+    }
+    m.Ns = append(m.Ns, handler.SOAHandler(m.Question[0].Name))
 	w.WriteMsg(m)
 }

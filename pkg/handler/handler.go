@@ -83,8 +83,42 @@ func DNSHandler(fqdn string, questionType uint16, sourceAddress net.IP, IPv4 boo
 			}
 		}
 	}
-	rr = RrGenerator(questionType, fqdn, value)
+    if value == "" {
+        // No value means no record
+        // Return dns.NULL
+        rr = nil
+    } else {
+        // If there's any value, we can return some data
+        // Go through normal RR generation process
+	    rr = RrGenerator(questionType, fqdn, value)
+    }
 	return rr
+}
+
+func SOAHandler(fqdn string) (Rr *dns.SOA) {
+    SOAData := make(map[interface{}]interface{})
+	for k := range config.ConfigMap {
+		if strings.Contains(fqdn, k) {
+            // Found the base domain
+            // Fetch SOA information
+			SOAData = fetch.FetchSOA(config.ConfigMap[k])
+            break
+        }
+    }
+    Rr = new(dns.SOA)
+    Rr.Hdr = dns.RR_Header {
+        Name: fqdn,
+        Rrtype: dns.TypeSOA,
+        Class: dns.ClassINET,
+        Ttl: 3600}
+    Rr.Ns = fqdn
+    Rr.Mbox = fqdn
+    Rr.Serial = uint32(SOAData["serial"].(int))
+    Rr.Refresh = uint32(SOAData["refresh"].(int))
+    Rr.Retry = uint32(SOAData["retry"].(int))
+    Rr.Expire = uint32(SOAData["expire"].(int))
+    Rr.Minttl = uint32(SOAData["minimum"].(int))
+    return Rr
 }
 
 func typeChecker(rrType string, questionType uint16) (res bool) {

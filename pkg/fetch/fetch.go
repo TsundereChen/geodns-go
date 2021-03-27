@@ -13,6 +13,10 @@ func FetchRR(config interface{}) (rrData map[interface{}]interface{}) {
 	return config.(map[interface{}]interface{})["rr"].(map[interface{}]interface{})
 }
 
+func FetchSOA(config interface{}) (rrData map[interface{}]interface{}) {
+    return config.(map[interface{}]interface{})["SOA"].(map[interface{}]interface{})
+}
+
 func FetchSubDomainName(fqdn string, domain string) (subDomain string) {
 	return strings.Split(strings.Split(fqdn, domain)[0], ".")[0]
 }
